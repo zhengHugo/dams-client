@@ -6,21 +6,28 @@ import java.rmi.registry.Registry;
 import java.text.ParseException;
 
 import api.Admin;
-import model.City;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentTime;
 import model.appointment.AppointmentType;
+import model.common.City;
 import model.common.ClientId;
 import model.role.AdminId;
 import model.role.PatientId;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Main {
+
+  private static final Logger logger = LogManager.getLogger();
+
   public static void main(String[] args) {
     final AdminId ID = new AdminId(City.Montreal, 1111);
     try {
       Admin admin = (Admin) getAssociatedRemote(ID);
       assert admin != null;
-      admin.addAppointment(new AppointmentId(City.Montreal, AppointmentTime.Afternoon, "10022022"), AppointmentType.Physician, 3);
+      var appointmentId = new AppointmentId(City.Montreal, AppointmentTime.Afternoon, "10022022");
+      admin.addAppointment(appointmentId, AppointmentType.Physician, 3);
+      admin.removeAppointment(appointmentId, AppointmentType.Physician);
     } catch (RemoteException | NotBoundException | ParseException e) {
       e.printStackTrace();
     }
