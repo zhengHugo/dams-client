@@ -9,12 +9,13 @@ import model.appointment.AppointmentId;
 import model.appointment.AppointmentType;
 
 public interface Admin extends Remote {
-  public void addAppointment(
+  void addAppointment(
       AppointmentId appointmentId, AppointmentType appointmentType, int capacity)
       throws RemoteException;
 
-  public void removeAppointment(AppointmentId appointmentId, AppointmentType appointmentType)
+  void removeAppointment(AppointmentId appointmentId, AppointmentType appointmentType)
       throws RemoteException;
 
-  public List<Appointment> listAppointmentAvailability(AppointmentType appointmentType) throws RemoteException;
+  List<Appointment> listAppointmentAvailability(AppointmentType appointmentType)
+      throws RemoteException;
 }
