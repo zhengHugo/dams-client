@@ -1,3 +1,4 @@
+import clients.AdminClient;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -10,7 +11,7 @@ import model.appointment.AppointmentId;
 import model.appointment.AppointmentTime;
 import model.appointment.AppointmentType;
 import model.common.City;
-import model.common.ClientId;
+import clients.ClientId;
 import model.role.AdminId;
 import model.role.PatientId;
 import org.apache.logging.log4j.LogManager;
@@ -21,14 +22,21 @@ public class Main {
   private static final Logger logger = LogManager.getLogger();
 
   public static void main(String[] args) {
-    final AdminId ID = new AdminId(City.Montreal, 1111);
+    final AdminId mtlAdminId = new AdminId(City.Montreal, 1111);
+    final AdminId queAdminId = new AdminId(City.Quebec, 1112);
+    final AdminId sheAdminId = new AdminId(City.Sherbrooke, 1113);
+    AdminClient mtlAdmin = new AdminClient(mtlAdminId);
+    AdminClient queAdmin = new AdminClient(queAdminId);
+    AdminClient sheAdmin = new AdminClient(sheAdminId);
     try {
-      Admin admin = (Admin) getAssociatedRemote(ID);
-      assert admin != null;
-      var appointmentId = new AppointmentId(City.Montreal, AppointmentTime.Afternoon, "10022022");
-      admin.addAppointment(appointmentId, AppointmentType.Physician, 3);
-      admin.removeAppointment(appointmentId, AppointmentType.Physician);
-    } catch (RemoteException | NotBoundException | ParseException e) {
+      var appId1 = new AppointmentId(City.Montreal, AppointmentTime.Afternoon, "10022022");
+      mtlAdmin.addAppointment(appId1, AppointmentType.Surgeon, 3);
+      var appId2 = new AppointmentId(City.Quebec, AppointmentTime.Afternoon, "11022022");
+      queAdmin.addAppointment(appId2, AppointmentType.Surgeon, 4);
+      var appId3 = new AppointmentId(City.Sherbrooke, AppointmentTime.Afternoon, "10022022");
+      sheAdmin.addAppointment(appId3, AppointmentType.Physician, 3);
+      mtlAdmin.listAppointmentAvailability(AppointmentType.Surgeon);
+    } catch (ParseException e) {
       e.printStackTrace();
     }
 

@@ -1,7 +1,7 @@
 package model.role;
 
 import model.common.City;
-import model.common.ClientId;
+import clients.ClientId;
 
 public class PatientId implements ClientId {
   private final City city;
