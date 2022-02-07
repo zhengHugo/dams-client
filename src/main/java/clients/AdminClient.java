@@ -5,6 +5,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import logger.LoggerUtil;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentType;
 import model.role.AdminId;
@@ -15,10 +16,12 @@ public class AdminClient {
 
   private final AdminId id;
   private Admin adminRemote;
-  private final Logger logger = LogManager.getLogger();
+  private final Logger logger;
 
   public AdminClient(AdminId id) {
     this.id = id;
+    LoggerUtil.createLoggerByClientId(id);
+    logger = LogManager.getLogger("logger." + id.getId());
     try {
       setAdminRemote();
     } catch (RemoteException | NotBoundException e) {
@@ -54,11 +57,11 @@ public class AdminClient {
       StringBuilder stringBuilder = new StringBuilder("Appointment availabilities of ");
       stringBuilder.append(type).append(" - ");
       for (var availability : availabilities) {
-          stringBuilder
-              .append(availability.appointmentId())
-              .append(" ")
-              .append(availability.availability())
-              .append(", ");
+        stringBuilder
+            .append(availability.appointmentId())
+            .append(" ")
+            .append(availability.availability())
+            .append(", ");
       }
       // replace the last ", " with "."
       stringBuilder.replace(stringBuilder.length()- 2, stringBuilder.length(), ".");
@@ -70,7 +73,7 @@ public class AdminClient {
 
   private void setAdminRemote() throws RemoteException, NotBoundException {
     Registry registry = LocateRegistry.getRegistry("localhost", 1099);
-    adminRemote = (Admin)switch (id.getCity()) {
+    adminRemote = (Admin) switch (id.getCity()) {
       case Montreal -> registry.lookup("AdminMTL");
       case Quebec -> registry.lookup("AdminQUE");
       case Sherbrooke -> registry.lookup("AdminSHE");

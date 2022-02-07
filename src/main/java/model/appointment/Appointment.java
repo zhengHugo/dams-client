@@ -27,10 +27,12 @@ public class Appointment {
     return patientIds;
   }
 
-  public synchronized void addPatient(PatientId id) {
+  public synchronized boolean addPatient(PatientId id) {
     if (patientIds.size() < capacity) {
       this.patientIds.add(id);
+      return true;
     }
+    return false;
   }
 
   public synchronized void addPatients(Collection<PatientId> ids) {
@@ -39,5 +41,9 @@ public class Appointment {
     } else {
       throw new IllegalArgumentException("Number of new patients exceeds the limit.");
     }
+  }
+
+  public synchronized boolean removePatient(PatientId id) {
+    return this.patientIds.remove(id);
   }
 }
