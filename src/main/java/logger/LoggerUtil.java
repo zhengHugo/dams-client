@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Appender;
 import org.apache.logging.log4j.core.Layout;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.appender.ConsoleAppender;
 import org.apache.logging.log4j.core.appender.FileAppender;
 import org.apache.logging.log4j.core.config.AppenderRef;
 import org.apache.logging.log4j.core.config.Configuration;
@@ -24,22 +25,34 @@ public class LoggerUtil {
             .withPattern("%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n")
             .build();
 
-    Appender appender =
+    Appender fileAppender =
         FileAppender.newBuilder()
             .withFileName("logs/" + clientId.getId() + ".log")
-            .setName(clientId.getId())
+            .setName("FileAppender")
             .setLayout(layout)
             .withAppend(false)
             .setConfiguration(config)
             .build();
-    appender.start();
-    config.addAppender(appender);
-    AppenderRef ref = AppenderRef.createAppenderRef("File", null, null);
-    AppenderRef[] refs = new AppenderRef[] {ref};
+    fileAppender.start();
+
+    Appender consoleAppender =
+        ConsoleAppender.newBuilder()
+            .setName("ConsoleAppender")
+            .setLayout(layout)
+            .setConfiguration(config)
+            .build();
+    consoleAppender.start();
+
+    config.addAppender(fileAppender);
+    AppenderRef fileAppenderRef = AppenderRef.createAppenderRef("FileAppender", null, null);
+    config.addAppender(consoleAppender);
+    AppenderRef consoleAppenderRef = AppenderRef.createAppenderRef("ConsoleAppender", null, null);
+    AppenderRef[] refs = new AppenderRef[] {fileAppenderRef, consoleAppenderRef};
     LoggerConfig loggerConfig =
         LoggerConfig.createLogger(
             false, Level.TRACE, "logger." + clientId.getId(), "true", refs, null, config, null);
-    loggerConfig.addAppender(appender, null, null);
+    loggerConfig.addAppender(fileAppender, null, null);
+    loggerConfig.addAppender(consoleAppender, null, null);
     config.addLogger("logger." + clientId.getId(), loggerConfig);
     ctx.updateLoggers();
   }

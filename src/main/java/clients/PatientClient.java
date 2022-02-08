@@ -7,6 +7,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 import logger.LoggerUtil;
+import model.appointment.Appointment;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentType;
 import model.role.PatientId;
@@ -43,16 +44,16 @@ public class PatientClient {
     }
   }
 
-  public List<AppointmentId> getAppointmentSchedule() {
+  public List<Appointment> getAppointmentSchedule() {
     try {
-      var appointmentIds = patientRemote.getAppointmentSchedule(this.id);
+      var appointments = patientRemote.getAppointmentSchedule(this.id);
       logger.info("Get appointment schedule: %s".formatted(
-          appointmentIds.stream()
-              .map(appointment -> appointment.getId() + " ")
+          appointments.stream()
+              .map(appointment -> appointment.getAppointmentId().getId() + " ")
               .reduce(String::concat)
               .orElse("")
       ));
-      return appointmentIds;
+      return appointments;
     } catch (RemoteException | NotBoundException e) {
       e.printStackTrace();
     }

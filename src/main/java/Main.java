@@ -1,8 +1,6 @@
 import clients.AdminClient;
 import clients.PatientClient;
-import java.text.ParseException;
 
-import model.appointment.Appointment;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentTime;
 import model.appointment.AppointmentType;
@@ -24,12 +22,14 @@ public class Main {
 
     final PatientId mtlPatientId = new PatientId(City.Montreal, 1111);
     PatientClient mtlPatient = new PatientClient(mtlPatientId);
-    AppointmentId appId1 =
+    var appId1 =
         new AppointmentId(City.Montreal, AppointmentTime.Afternoon, "10022022");
     mtlAdmin.addAppointment(appId1, AppointmentType.Surgeon, 3);
     var appId2 = new AppointmentId(City.Quebec, AppointmentTime.Morning, "11022022");
+    var appId3 = new AppointmentId(City.Montreal, AppointmentTime.Morning, "10022022");
     queAdmin.addAppointment(appId2, AppointmentType.Physician, 4);
     mtlPatient.bookAppointment(appId1, AppointmentType.Surgeon);
+    mtlPatient.bookAppointment(appId3, AppointmentType.Surgeon);
     mtlPatient.bookAppointment(appId2, AppointmentType.Physician);
     mtlPatient.getAppointmentSchedule();
     //    final AdminId queAdminId = new AdminId(City.Quebec, 1112);

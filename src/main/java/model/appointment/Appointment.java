@@ -1,18 +1,21 @@
 package model.appointment;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import model.role.PatientId;
 
-public class Appointment {
+public class Appointment implements Serializable {
   private final AppointmentId appointmentId;
   private final int capacity;
   private final ArrayList<PatientId> patientIds;
+  private final AppointmentType type;
 
-  public Appointment(AppointmentId appointmentId, int capacity) {
+  public Appointment(AppointmentId appointmentId, int capacity, AppointmentType appointmentType) {
     this.appointmentId = appointmentId;
     this.capacity = capacity;
     this.patientIds = new ArrayList<>();
+    this.type = appointmentType;
   }
 
   public AppointmentId getAppointmentId() {
@@ -25,6 +28,10 @@ public class Appointment {
 
   public ArrayList<PatientId> getPatientIds() {
     return patientIds;
+  }
+
+  public AppointmentType getType() {
+    return type;
   }
 
   public synchronized boolean addPatient(PatientId id) {
