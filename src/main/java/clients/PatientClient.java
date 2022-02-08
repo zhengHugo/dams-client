@@ -7,7 +7,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.List;
 import logger.LoggerUtil;
-import model.appointment.Appointment;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentType;
 import model.role.PatientId;
@@ -39,7 +38,7 @@ public class PatientClient {
       } else {
         logger.info("Unable to book appointment: %s - %s".formatted(type, appointmentId));
       }
-    } catch (RemoteException e) {
+    } catch (RemoteException | NotBoundException e) {
       e.printStackTrace();
     }
   }
@@ -54,7 +53,7 @@ public class PatientClient {
               .orElse("")
       ));
       return appointmentIds;
-    } catch (RemoteException e) {
+    } catch (RemoteException | NotBoundException e) {
       e.printStackTrace();
     }
     return null;

@@ -1,10 +1,10 @@
 package api;
 
+import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import model.appointment.Appointment;
 import model.appointment.AppointmentAvailability;
 import model.appointment.AppointmentId;
 import model.appointment.AppointmentType;
@@ -51,7 +51,7 @@ public interface Admin extends Remote {
    * @return true if operation is successful
    */
   boolean bookAppointment(PatientId patientId, AppointmentId appointmentId, AppointmentType type)
-      throws RemoteException;
+      throws RemoteException, NotBoundException;
 
   /**
    * List all appointments associated with this patient
@@ -59,7 +59,8 @@ public interface Admin extends Remote {
    * @param patientId Patient id
    * @return a list of appointments associated with this patient
    */
-  List<AppointmentId> getAppointmentSchedule(PatientId patientId) throws RemoteException;
+  List<AppointmentId> getAppointmentSchedule(PatientId patientId)
+      throws RemoteException, NotBoundException;
 
   /**
    * Cancel an appointment
